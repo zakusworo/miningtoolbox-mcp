@@ -6,8 +6,8 @@ Based on:
 - Wilson et al. (2006) — Slurry Transport Using Centrifugal Pumps
 - SME Handbook — Slurry Pipeline Design
 
-NOT based on IAPWS — slurry is a two-phase mixture (water + solids).
-IAPWS covers water phase properties only; solids are handled empirically.
+Two-phase solid-liquid mixture methods.
+Solids are handled empirically per SME standards.
 """
 import math
 
@@ -216,4 +216,4 @@ if __name__ == "__main__":
     print(f"  Hindered settling:  {v_settle:.4f} m/s")
     
     print("\nNOTE: Slurry uses Bingham plastic + empirical settling models.")
-    print("NO IAPWS standard covers two-phase solid-liquid mixtures.")
+    print("Slurry transport per SME and Wilson et al. standards.")

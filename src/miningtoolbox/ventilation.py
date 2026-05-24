@@ -5,10 +5,10 @@ Based on:
 - McPherson — Subsurface Ventilation Engineering (1993)
 - Hartman & Mutmansky — Introductory Mining Engineering
 - NIOSH Mine Ventilation publications
-- ASHRAE Fundamentals (psychrometric basis, not IAPWS-specific)
+- ASHRAE Fundamentals (psychrometric basis)
 
-NOT based on IAPWS — psychrometric calculations use empirical formulas
-or ASHRAE equations for humid air, NOT the virial IAPWS G11-15 formulation.
+Psychrometric calculations using empirical formulas
+or ASHRAE equations for humid air.
 """
 import math
 
@@ -19,7 +19,7 @@ import math
 def saturation_vapor_pressure_ashrae(T_C: float) -> float:
     """
     Saturation vapor pressure using ASHRAE formulation.
-    Simpler than IAPWS G11-15, widely used in HVAC/mining.
+    Widely used in HVAC and mining applications.
     
     Args:
         T_C: Temperature in Celsius
@@ -276,4 +276,4 @@ if __name__ == "__main__":
     print(f"  Fan power:         {power:.1f} kW")
     
     print("\nNOTE: Psychrometrics use ASHRAE / empirical formulas.")
-    print("NO IAPWS standard covers mine ventilation or heat stress.")
+    print("Ventilation per ASHRAE, NIOSH, and McPherson standards.")

@@ -7,7 +7,7 @@ Based on:
 - RQD (Rock Quality Designation) — Deere 1967
 - GSI (Geological Strength Index) — Hoek & Brown 1997
 
-NOT based on IAPWS — this is purely empirical rock engineering.
+Empirical rock engineering methods.
 """
 import math
 
@@ -218,4 +218,4 @@ if __name__ == "__main__":
     print(f"  RQD from core: {rqd}%")
     
     print("\nNOTE: All methods are empirical rock engineering (Hoek-Brown, RQD, GSI).")
-    print("NO IAPWS standard covers rock mechanics.")
+    print("Rock mechanics per Hoek-Brown and ISRM standards.")

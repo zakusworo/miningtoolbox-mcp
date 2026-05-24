@@ -1,7 +1,7 @@
 """
 FastMCP server exposing mining engineering tools.
 
-Zero IAPWS dependency — no CoolProp, no water phase properties.
+Empirical mining engineering methods — no water phase properties.
 Tools cover: rock mechanics, ventilation, slurry, dewatering,
 slope stability, blasting.
 
@@ -174,8 +174,8 @@ def toolbox_info() -> dict:
         "version": "0.1.0",
         "modules": ["rock_mechanics", "ventilation", "slurry", "dewatering", "slope_stability", "blasting"],
         "standards": ["Hoek-Brown 2002", "ASHRAE", "USBM RI 8507", "SME", "NIOSH", "ASTM D7012/D5731"],
-        "iapws_dependency": False,
-        "note": "Zero IAPWS. Mining engineering uses empirical standards, not water/steam thermodynamics."
+        
+        
     }
 
 

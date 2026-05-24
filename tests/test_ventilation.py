@@ -1,4 +1,4 @@
-"""Tests for ventilation module (NO IAPWS)."""
+"""Tests for ventilation module."""
 import pytest
 from miningtoolbox import ventilation as vent
 

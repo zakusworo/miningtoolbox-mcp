@@ -1,6 +1,6 @@
 """MiningToolbox MCP — pure mining engineering tools for Hermes Agent.
 
-Zero IAPWS dependency. All modules use empirical, industry-standard methods.
+All modules use empirical, industry-standard methods.
 """
 
 from . import rock_mechanics

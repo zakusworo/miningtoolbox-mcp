@@ -7,7 +7,7 @@ Based on:
 - Australian/New Zealand standard AS 2187.2 — Explosives
 - SME Handbook — Drilling and Blasting chapter
 
-NOT based on IAPWS — purely geotechnical / explosives engineering.
+Geotechnical and explosives engineering methods.
 """
 import math
 
@@ -302,4 +302,4 @@ if __name__ == "__main__":
     
     print("\nNOTE: USBM RI 8507 empirical blast vibration model.")
     print("Detailed design requires blast specialist and site-specific calibration.")
-    print("NO IAPWS standard covers blasting or rock fragmentation.")
+    print("Blasting per USBM and AS 2187.2 standards.")

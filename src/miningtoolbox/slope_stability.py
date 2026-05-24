@@ -7,7 +7,7 @@ Based on:
 - Slope stability chart methods (Taylor, Hoek-Bray)
 - SME Handbook — Slope Engineering chapter
 
-NOT based on IAPWS — purely geotechnical / rock mechanics.
+Geotechnical and rock mechanics methods.
 """
 import math
 
@@ -241,4 +241,4 @@ if __name__ == "__main__":
     
     print("\nNOTE: Simplified Bishop method for conceptual design.")
     print("Detailed design requires 2D/3D numerical modeling (Slide2, FLAC, Plaxis).")
-    print("NO IAPWS standard covers slope stability.")
+    print("Slope stability per SME and Hoek-Bray methods.")

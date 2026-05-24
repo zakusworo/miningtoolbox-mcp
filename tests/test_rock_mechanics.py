@@ -1,4 +1,4 @@
-"""Tests for rock mechanics module (NO IAPWS)."""
+"""Tests for rock mechanics module."""
 import pytest, math
 from miningtoolbox import rock_mechanics as rm
 

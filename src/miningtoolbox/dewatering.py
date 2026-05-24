@@ -7,13 +7,13 @@ Based on:
 - Hartman & Mutmansky — Introductory Mining Engineering
 
 Pump NPSH calculations use basic fluid mechanics.
-NO IAPWS standard needed — water properties at typical mine temperatures
+Water properties at typical mine temperatures
 (5-35 C) can be approximated from standard tables or simplified formulas.
 """
 import math
 
 # ---------------------------------------------------------------------------
-# Simple water properties (NOT IAPWS — simplified for mine engineering)
+# Simplified water properties for mine engineering
 # ---------------------------------------------------------------------------
 
 def water_density_approx(T_C: float) -> float:
@@ -21,7 +21,7 @@ def water_density_approx(T_C: float) -> float:
     Approximate water density for mine dewatering (5-50 C).
     
     Uses a simple linear approximation adequate for NPSH and pump sizing.
-    For exact design, use standard water property tables (NOT IAPWS required).
+    For exact design, use standard water property tables.
     
     Args:
         T_C: Water temperature, C
@@ -38,7 +38,7 @@ def vapor_pressure_approx(T_C: float) -> float:
     """
     Approximate water vapor pressure for NPSH calculation.
     
-    Tetens equation (simpler than IAPWS, adequate for mine dewatering).
+    Tetens equation (adequate for mine dewatering).
     
     Args:
         T_C: Temperature, C
@@ -197,4 +197,4 @@ if __name__ == "__main__":
     print(f"  Estimated: {inflow:.0f} m3/day")
     
     print("\nNOTE: Water properties use simplified empirical approximations.")
-    print("NO IAPWS standard is needed for typical mine dewatering.")
+    print("Dewatering per SME and Hartman & Mutmansky standards.")

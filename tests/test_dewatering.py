@@ -1,4 +1,4 @@
-"""Tests for dewatering module (NO IAPWS)."""
+"""Tests for dewatering module."""
 import pytest
 from miningtoolbox import dewatering as dw
 

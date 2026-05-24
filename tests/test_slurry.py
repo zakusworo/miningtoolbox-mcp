@@ -1,4 +1,4 @@
-"""Tests for slurry module (NO IAPWS)."""
+"""Tests for slurry module."""
 import pytest
 from miningtoolbox import slurry
 
