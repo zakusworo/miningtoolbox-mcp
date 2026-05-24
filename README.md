@@ -2,21 +2,7 @@
 
 Mining engineering toolbox as an MCP (Model Context Protocol) server for Hermes Agent.
 
-**Zero IAPWS dependency.** Mining engineering uses empirical, industry-standard
-methods for rock, soil, slurry, and ore — none of which are covered by IAPWS
-water/steam thermodynamics.
-
-## Why Separate from pygeotoolbox-mcp?
-
-| Toolbox | Domain | Standards | IAPWS? |
-|---------|--------|-----------|--------|
-| pygeotoolbox-mcp | Geothermal / water / steam | IAPWS-IF97, G11-15, G12-15, G13-15, G14-19 | YES |
-| **miningtoolbox-mcp** | **Mining / rock / slurry / blasting** | **Hoek-Brown, SME, NIOSH, USBM, ASHRAE** | **NO** |
-
-Mining and geothermal are **adjacent but distinct** engineering fields.
-Water appears in both (dewatering, ventilation), but the core physics differs:
-- Geothermal = IAPWS water/steam properties + heat transfer
-- Mining = rock mechanics, explosives, slurry rheology, geotechnical stability
+All modules use **stdlib Python only** — zero external dependencies beyond `fastmcp`.
 
 ## Modules
 
@@ -86,22 +72,19 @@ PYTHONPATH=src python3 src/miningtoolbox/mcp_server.py
 ## Hermes Agent Integration
 
 ```text
-# In Hermes Agent, add to MCP servers:
-- pygeotoolbox-mcp  (for geothermal / water / steam)
+# Add to Hermes Agent MCP servers:
 - miningtoolbox-mcp (for mining / rock / blasting)
 
-Hermes will automatically discover all 24+29 = 53 tools across both servers.
+Hermes will automatically discover all 24 tools.
 ```
 
 ## Tests
-
-Copy test files from hermes-mining-engineering/tests/ and run:
 
 ```bash
 PYTHONPATH=src python3 -m pytest tests/ -v
 ```
 
-All 36 tests pass with zero external dependencies (stdlib Python only).
+All 36 tests pass with stdlib Python.
 
 ## License
 
