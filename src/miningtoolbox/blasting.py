@@ -137,7 +137,7 @@ def air_overpressure(
     op_linear = site_factor_k * (sd ** (-attenuation_exponent))
     
     # Convert to dB (20 μPa reference)
-    op_db = 20 * math.log10(op_linear / 0.02)  # 0.02 Pa = 20 μPa
+    op_db = 20 * math.log10(op_linear / 0.00002)
     
     return round(op_db, 1)
 
@@ -241,8 +241,8 @@ def blast_design(
     hole_depth = bench_height_m + subdrill
     
     # Charge per hole
-    # Explosive column = hole_depth - stemming - subdrill
-    explosive_column = hole_depth - stemming - subdrill
+    # Explosive column = hole_depth - stemming (includes subdrill loading)
+    explosive_column = hole_depth - stemming
     # Assume ANFO density ~ 0.8 g/cm³ = 800 kg/m³
     explosive_density = 800.0  # kg/m³
     hole_area = math.pi * (d_m / 2) ** 2

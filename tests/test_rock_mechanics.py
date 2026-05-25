@@ -12,8 +12,8 @@ class TestRockMechanics:
         params = rm.hoek_brown_parameters(gsi=65, mi=25, D=0.5)
         assert params['mb'] > 0
         assert params['s'] > 0
-        assert params['a'] == 0.5  # GSI > 25
-        assert params['E_rm_MPa'] > 0
+        assert 0.49 < params['a'] < 0.51  # continuous Hoek-Brown 2002
+        assert params['E_rm_MPa'] > 1000
 
     def test_hoek_brown_failure(self):
         params = rm.hoek_brown_parameters(60, 20, 0.0)

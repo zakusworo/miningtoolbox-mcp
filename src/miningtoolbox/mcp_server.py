@@ -17,9 +17,9 @@ mcp = FastMCP("miningtoolbox")
 # ================================================================
 
 @mcp.tool()
-def get_rock_mass_parameters(gsi: float, mi: float, D: float = 0.0) -> dict:
+def get_rock_mass_parameters(gsi: float, mi: float, D: float = 0.0, sigma_ci_MPa: float = 100.0) -> dict:
     """Calculate Hoek-Brown rock mass parameters from GSI and mi."""
-    return rock_mechanics.hoek_brown_parameters(gsi, mi, D)
+    return rock_mechanics.hoek_brown_parameters(gsi, mi, D, sigma_ci_MPa)
 
 @mcp.tool()
 def rock_mass_strength(sigma3_MPa: float, mb: float, s: float, a: float, sigma_ci_MPa: float) -> float:
@@ -112,13 +112,13 @@ def groundwater_inflow(k_m_d: float, aquifer_thickness_m: float, drawdown_m: flo
 # ================================================================
 
 @mcp.tool()
-def factor_of_safety(slip_radius_m: float, slip_depth_m: float, slope_height_m: float,
-                     slope_angle_deg: float, cohesion_kPa: float, friction_angle_deg: float,
-                     unit_weight_kN_m3: float, pore_pressure_ratio_ru: float = 0.0) -> float:
-    """Simplified Bishop factor of safety for circular slip surface."""
+def factor_of_safety(slope_height_m: float, slope_angle_deg: float, cohesion_kPa: float,
+                     friction_angle_deg: float, unit_weight_kN_m3: float,
+                     pore_pressure_ratio_ru: float = 0.0, slip_radius_m: float | None = None) -> float:
+    """Bishop simplified factor of safety for circular slip surface."""
     return slope_stability.bishop_factor_of_safety(
-        slip_radius_m, slip_depth_m, slope_height_m, slope_angle_deg,
-        cohesion_kPa, friction_angle_deg, unit_weight_kN_m3, pore_pressure_ratio_ru
+        slope_height_m, slope_angle_deg, cohesion_kPa, friction_angle_deg,
+        unit_weight_kN_m3, pore_pressure_ratio_ru, slip_radius_m
     )
 
 @mcp.tool()

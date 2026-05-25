@@ -5,7 +5,6 @@ from miningtoolbox import slope_stability as ss
 class TestSlopeStability:
     def test_bishop_F_reasonable(self):
         F = ss.bishop_factor_of_safety(
-            slip_radius_m=80, slip_depth_m=30,
             slope_height_m=150, slope_angle_deg=42,
             cohesion_kPa=250, friction_angle_deg=35,
             unit_weight_kN_m3=26, pore_pressure_ratio_ru=0.15
@@ -34,7 +33,6 @@ class TestSlopeStability:
 
     def test_flat_slope_high_F(self):
         F = ss.bishop_factor_of_safety(
-            slip_radius_m=50, slip_depth_m=10,
             slope_height_m=50, slope_angle_deg=15,
             cohesion_kPa=300, friction_angle_deg=30,
             unit_weight_kN_m3=20

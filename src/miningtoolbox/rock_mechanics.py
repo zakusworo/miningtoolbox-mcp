@@ -51,45 +51,43 @@ def rmr_basic(rqd: int, spacing: float, condition: int, groundwater: int, orient
 # Hoek-Brown (2002) Generalized Failure Criterion
 # ---------------------------------------------------------------------------
 
-def hoek_brown_parameters(gsi: float, mi: float, D: float = 0.0) -> dict:
+def hoek_brown_parameters(gsi: float, mi: float, D: float = 0.0, sigma_ci: float = 100.0) -> dict:
     """
     Calculate Hoek-Brown material constants mb, s, a from GSI.
-    
+
     Based on Hoek, Carranza-Torres & Corkum (2002) — 'Hoek-Brown 2002'.
-    
+
     Args:
         gsi: Geological Strength Index 0-100
         mi: Intact rock material constant (e.g., granite ~25, sandstone ~17, shale ~7)
         D: Disturbance factor 0=undisturbed, 1=very disturbed
-    
+        sigma_ci: Uniaxial compressive strength of intact rock, MPa (default 100)
+
     Returns:
-        dict with mb, s, a, E_rm (rock mass modulus in MPa)
+        dict with mb, s, a, E_rm (rock mass modulus in MPa), sigma_cm (rock mass UCS in MPa)
     """
     if gsi < 0 or gsi > 100:
         raise ValueError("GSI must be 0 to 100")
-    
-    # Material constants
-    mb = mi * math.exp((gsi - 100) / 28 - 14 * D)
-    
-    if gsi < 25:
-        s = 0.0
-        a = 0.65 - gsi / 200
-    else:
-        s = math.exp((gsi - 100) / 9)
-        a = 0.5
-    
-    # Rock mass modulus (MPa) — Hoek-Diederichs equation
-    E_rm = 100000 * (0.5 + 0.5 * math.cos(math.pi * gsi / 100 + math.pi / 6)) ** 2
-    if gsi > 50:
-        # More accurate for high GSI
-        E_rm = 100000 * ((100 - gsi) / 100) ** 2
-    
+    if D < 0 or D > 1:
+        raise ValueError("Disturbance factor D must be 0 to 1")
+
+    # Hoek-Brown 2002 material constants
+    mb = mi * math.exp((gsi - 100) / (28 - 14 * D))
+    s = math.exp((gsi - 100) / (9 - 3 * D))
+    a = 0.5 + (math.exp(-gsi / 15) - math.exp(-20 / 3)) / 6
+
+    # Rock mass modulus (MPa) — Hoek & Diederichs (2006), simplified when Ei unknown
+    E_rm = 100000 * (1 - D / 2) / (1 + math.exp((75 + 25 * D - gsi) / 11))
+
+    # Rock mass UCS (MPa)
+    sigma_cm = sigma_ci * s ** a
+
     return {
         "mb": round(mb, 3),
         "s": round(s, 6),
         "a": round(a, 3),
         "E_rm_MPa": round(E_rm, 1),
-        "sigma_cm_MPa": round(mb * s**a, 3) if s > 0 else 0.0
+        "sigma_cm_MPa": round(sigma_cm, 3)
     }
 
 
@@ -157,9 +155,9 @@ def mohr_coulomb_from_hoek_brown(mb: float, s: float, a: float, sigma_ci: float,
     else:
         cohesion = (sigma1_1 * (1 - sin_phi)) / (2 * math.cos(phi_rad))
     
-    # Tensile strength (Hoek-Brown): sigma_t = -s * sigma_ci / mb
+    # Tensile strength (Hoek-Brown exact): sigma_t = sigma_ci/2 * (mb - sqrt(mb² + 4s))
     if mb > 0:
-        tensile = -s * sigma_ci / mb
+        tensile = sigma_ci / 2 * (mb - math.sqrt(mb**2 + 4 * s))
     else:
         tensile = 0.0
     

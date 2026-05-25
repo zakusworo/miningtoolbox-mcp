@@ -60,10 +60,7 @@ def slurry_viscosity_bingham(
     """
     # Thomas (1965) relative viscosity for suspensions
     # μ_r = 1 + 2.5*Cv + 10.05*Cv² + 0.00273*exp(16.6*Cv)
-    # Convert weight to volume concentration (approximate)
-    Cv = Cw * water_viscosity_Pas / (Cw * water_viscosity_Pas + (1-Cw) * solids_density)  # rough
-    # Better: Cv = Cw * ρ_m / ρ_s
-    
+    # Convert weight to volume concentration
     rho_m = slurry_density(1000, solids_density, Cw)
     Cv = Cw * rho_m / solids_density
     
@@ -175,18 +172,24 @@ def hindered_settling_velocity(
     d = particle_size_mm / 1000.0  # m
     g = 9.81
     delta_rho = solids_density - fluid_density
-    
-    # Stokes regime for small particles
-    if d < 0.1e-3:  # <0.1 mm
-        v_stokes = (delta_rho * g * d**2) / (18 * fluid_viscosity_Pas)
+    nu = fluid_viscosity_Pas / fluid_density  # kinematic viscosity, m²/s
+
+    # Ferguson-Church (2004) explicit settling velocity — valid Stokes to turbulent
+    R_sub = delta_rho / fluid_density  # submerged specific gravity
+    v_terminal = (R_sub * g * d**2) / (18 * nu + math.sqrt(0.75 * R_sub * g * d**3))
+
+    # Hindered settling: Richardson-Zaki v_h = v_terminal * (1 - Cv)^n
+    # n depends on particle Reynolds number
+    Re_p = v_terminal * d / nu
+    if Re_p < 0.2:
+        n = 4.65
+    elif Re_p < 1.0:
+        n = 4.35 * Re_p**(-0.03)
+    elif Re_p < 500:
+        n = 4.45 * Re_p**(-0.1)
     else:
-        # Intermediate — use empirical
-        v_stokes = 0.1  # m/s placeholder
-    
-    # Hindered settling: v_h = v_stokes * (1 - Cv)^n
-    # n ~ 4.65 for low Re, ~2.5 for high Re
-    n = 4.65
-    v_h = v_stokes * ((1.0 - Cv) ** n)
+        n = 2.39
+    v_h = v_terminal * ((1.0 - Cv) ** n)
     
     return round(v_h, 4)
 

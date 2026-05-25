@@ -28,9 +28,9 @@ def saturation_vapor_pressure_ashrae(T_C: float) -> float:
         Saturation vapor pressure in kPa
     """
     # ASHRAE simplified: Tetens-type equation
-    # Valid 0 to 50 C
+    # Valid -10 to 60 C
     if T_C < -10 or T_C > 60:
-        return float('nan')
+        raise ValueError(f"Temperature {T_C} C out of valid range (-10 to 60 C)")
     
     # Tetens equation (kPa)
     e_sat = 0.61078 * math.exp(17.27 * T_C / (T_C + 237.3))
@@ -50,11 +50,7 @@ def wet_bulb_temperature(T_dry: float, RH: float, P: float = 101.325) -> float:
     Returns:
         Wet-bulb temperature, C
     """
-    # Stull formula for wet-bulb
-    e = RH * saturation_vapor_pressure_ashrae(T_dry)
-    
-    # Iterative solution (simplified)
-    # Start with guess
+    # Stull (2011) empirical wet-bulb formula, accurate to ±0.5 C
     Tw = T_dry * math.atan(0.151977 * ((RH * 100 + 8.313659) ** 0.5))
     Tw += math.atan(T_dry + RH * 100) - math.atan(RH * 100 - 1.676331)
     Tw += 0.00391838 * ((RH * 100) ** 1.5) * math.atan(0.023101 * RH * 100)
@@ -87,10 +83,10 @@ def psychrometric_properties(T_C: float, RH: float, P_kPa: float = 101.325) -> d
     # Wet-bulb (empirical)
     Tw = wet_bulb_temperature(T_C, RH, P_kPa)
     
-    # Density (kg/m3)
+    # Density (kg/m3) — moist air gas law with virtual temperature correction
     R_da = 0.287058  # kJ/kg·K for dry air
     T_K = T_C + 273.15
-    rho = P_kPa / (R_da * T_K * (1 + 1.6078 * W))
+    rho = P_kPa / (R_da * T_K) * (1 + W) / (1 + 1.6078 * W)
     
     return {
         "T_dry_C": T_C,
