@@ -19,7 +19,7 @@ All modules use **stdlib Python only** — zero external dependencies beyond `fa
 
 ```text
 Rock Mechanics:
-  get_rock_mass_parameters     — Hoek-Brown from GSI, mi
+  get_rock_mass_parameters     — Hoek-Brown from GSI, mi, sigma_ci
   rock_mass_strength           — Major principal stress at failure
   mohr_coulomb_equiv           — Cohesion + friction angle equivalent
   calculate_rqd                — Rock Quality Designation
