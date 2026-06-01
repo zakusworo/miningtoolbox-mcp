@@ -9,5 +9,6 @@ from . import slurry
 from . import dewatering
 from . import slope_stability
 from . import blasting
+from . import economics
 
 __version__ = "0.1.0"

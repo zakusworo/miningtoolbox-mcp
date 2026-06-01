@@ -38,3 +38,51 @@ class TestSlopeStability:
             unit_weight_kN_m3=20
         )
         assert F > 1.5
+
+    def test_bishop_critical_circle_lower_than_single(self):
+        # Critical-circle search must return a FOS no higher than any
+        # single user-specified circle at the same H, c, phi, gamma, ru.
+        H, c, phi, gamma, ru = 50, 10, 35, 22, 0.0
+        F_crit = ss.bishop_factor_of_safety(H, 50, c, phi, gamma, ru)
+        for R in (1.0, 1.5, 2.0, 2.5, 3.0):
+            R_m = R * H
+            # Toe-passing center
+            yc = 0.5 * R_m + 0.3 * H
+            xc_sq = R_m**2 - yc**2
+            if xc_sq <= 0:
+                continue
+            xc = math.sqrt(xc_sq)
+            F_single = ss.bishop_factor_of_safety(
+                H, 50, c, phi, gamma, ru,
+                slip_radius_m=R_m,
+                slip_center_x_m=xc, slip_center_y_m=yc,
+            )
+            assert F_crit <= F_single + 1e-6, (
+                f"critical FOS {F_crit} should be <= single-circle FOS {F_single} at R={R}H"
+            )
+
+    def test_bishop_explicit_circle_mode(self):
+        # When the user fully specifies a circle, the function returns
+        # the FOS for that single circle (no search). Verify by computing
+        # the same circle with the internal helper and comparing.
+        H, c, phi, gamma, ru = 30, 20, 25, 20, 0.0
+        tan_beta = math.tan(math.radians(45))
+        crest_x = H / tan_beta
+        R = 1.5 * H
+        yc = 0.5 * R + 0.3 * H
+        xc = math.sqrt(R**2 - yc**2)
+        F_single = ss.bishop_factor_of_safety(
+            H, 45, c, phi, gamma, ru,
+            slip_radius_m=R, slip_center_x_m=xc, slip_center_y_m=yc,
+        )
+        F_helper = ss._bishop_single_circle(
+            H, tan_beta, crest_x, math.radians(phi), c, gamma, ru,
+            R, xc, yc, 30, 50, 1e-4,
+        )
+        assert abs(F_single - F_helper) < 1e-6
+
+    def test_bishop_F_decreases_with_ru(self):
+        F0 = ss.bishop_factor_of_safety(50, 40, 30, 30, 22, 0.0)
+        F1 = ss.bishop_factor_of_safety(50, 40, 30, 30, 22, 0.2)
+        F2 = ss.bishop_factor_of_safety(50, 40, 30, 30, 22, 0.4)
+        assert F0 > F1 > F2

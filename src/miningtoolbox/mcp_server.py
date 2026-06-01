@@ -8,7 +8,7 @@ slope stability, blasting.
 Run:  fastmcp run src/miningtoolbox/mcp_server.py
 """
 from fastmcp import FastMCP
-from miningtoolbox import rock_mechanics, ventilation, slurry, dewatering, slope_stability, blasting
+from miningtoolbox import rock_mechanics, ventilation, slurry, dewatering, slope_stability, blasting, economics
 
 mcp = FastMCP("miningtoolbox")
 
@@ -163,6 +163,38 @@ def blast_design_tool(bench_height_m: float, hole_diameter_mm: float = 150.0,
 
 
 # ================================================================
+# ECONOMICS
+# ================================================================
+
+@mcp.tool()
+def calculate_npv(discount_rate: float, cash_flows: list, initial_investment: float = 0.0) -> float:
+    """Calculate Net Present Value for mining project evaluation."""
+    return economics.npv(discount_rate, cash_flows, initial_investment)
+
+@mcp.tool()
+def calculate_payback(initial_investment: float, annual_cash_flow: float, discount_rate: float | None = None) -> float:
+    """Calculate payback period (simple or discounted)."""
+    return economics.payback_period(initial_investment, annual_cash_flow, discount_rate)
+
+@mcp.tool()
+def calculate_cutoff_grade(operating_cost_per_tonne: float, metal_price_per_oz: float,
+                          recovery_percent: float, selling_costs_per_oz: float = 0.0) -> float:
+    """Calculate breakeven cutoff grade for precious metal mines."""
+    return economics.cutoff_grade(operating_cost_per_tonne, metal_price_per_oz, recovery_percent, selling_costs_per_oz)
+
+@mcp.tool()
+def calculate_annual_revenue(production_tonnes_per_year: float, grade_g_t: float,
+                             recovery_percent: float, metal_price_per_oz: float) -> float:
+    """Calculate annual revenue for precious metal mine."""
+    return economics.revenue_per_year(production_tonnes_per_year, grade_g_t, recovery_percent, metal_price_per_oz)
+
+@mcp.tool()
+def calculate_mining_cost(labor_cost: float, equipment_cost: float, consumables_cost: float, tonnes: float) -> float:
+    """Calculate total mining cost per tonne."""
+    return economics.mining_cost_per_tonne(labor_cost, equipment_cost, consumables_cost, tonnes)
+
+
+# ================================================================
 # META
 # ================================================================
 
@@ -172,10 +204,8 @@ def toolbox_info() -> dict:
     return {
         "name": "miningtoolbox-mcp",
         "version": "0.1.0",
-        "modules": ["rock_mechanics", "ventilation", "slurry", "dewatering", "slope_stability", "blasting"],
+        "modules": ["rock_mechanics", "ventilation", "slurry", "dewatering", "slope_stability", "blasting", "economics"],
         "standards": ["Hoek-Brown 2002", "ASHRAE", "USBM RI 8507", "SME", "NIOSH", "ASTM D7012/D5731"],
-        
-        
     }
 
 

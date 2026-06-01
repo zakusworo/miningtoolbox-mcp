@@ -28,7 +28,10 @@ class TestBlasting:
         assert op_far < op_near
 
     def test_blast_design_reasonable(self):
-        design = bl.blast_design(bench_height_m=15, hole_diameter_mm=150)
+        # Target PF (0.50) is matched to the actual geometry produced by
+        # the rules-of-thumb (burden 4.5m, spacing 5.4m, 150mm hole, ANFO).
+        design = bl.blast_design(bench_height_m=15, hole_diameter_mm=150,
+                                 powder_factor_kg_m3=0.50)
         assert 3 < design['burden_m'] < 7
         assert design['spacing_m'] > design['burden_m']
         assert design['stemming_m'] > 0
@@ -40,3 +43,16 @@ class TestBlasting:
                                   stemming_m=3.0, hole_diameter_mm=115)
         assert design['burden_m'] == 4.5
         assert design['spacing_m'] == 5.5
+
+    def test_blast_design_overcharged_detection(self):
+        # Geometry yields actual PF ~0.51; target 0.30 → over-charged
+        design = bl.blast_design(bench_height_m=15, hole_diameter_mm=150,
+                                 powder_factor_kg_m3=0.30)
+        assert 'over-charged' in design['status']
+        assert design['powder_factor_kg_m3'] > design['target_powder_factor']
+
+    def test_blast_design_undercharged_detection(self):
+        # Very high target → under-charged relative to target
+        design = bl.blast_design(bench_height_m=15, hole_diameter_mm=150,
+                                 powder_factor_kg_m3=1.50)
+        assert 'under-charged' in design['status']

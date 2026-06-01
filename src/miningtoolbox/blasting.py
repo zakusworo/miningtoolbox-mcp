@@ -247,13 +247,23 @@ def blast_design(
     explosive_density = 800.0  # kg/m³
     hole_area = math.pi * (d_m / 2) ** 2
     charge_kg = explosive_column * hole_area * explosive_density
-    
+
     # Volume per hole
     volume_per_hole = burden * spacing * bench_height_m
-    
-    # Powder factor
+
+    # Powder factor: actual = charge / volume; desired = powder_factor_kg_m3
+    # Compare actual to target with a ±20% tolerance — outside this band
+    # the geometry (burden / spacing / stemming) does not match the desired
+    # explosive loading and the design should be revisited.
     actual_pf = charge_kg / volume_per_hole
-    
+    pf_ratio = actual_pf / powder_factor_kg_m3 if powder_factor_kg_m3 > 0 else 1.0
+    if 0.8 <= pf_ratio <= 1.2:
+        status = "OK"
+    elif pf_ratio < 0.8:
+        status = f"REVIEW — under-charged (actual PF {actual_pf:.3f} vs target {powder_factor_kg_m3:.3f} kg/m3)"
+    else:
+        status = f"REVIEW — over-charged (actual PF {actual_pf:.3f} vs target {powder_factor_kg_m3:.3f} kg/m3)"
+
     return {
         "hole_diameter_mm": hole_diameter_mm,
         "hole_depth_m": round(hole_depth, 1),
@@ -265,7 +275,7 @@ def blast_design(
         "volume_m3": round(volume_per_hole, 1),
         "powder_factor_kg_m3": round(actual_pf, 3),
         "target_powder_factor": powder_factor_kg_m3,
-        "status": "OK" if 0.3 <= actual_pf <= 0.6 else "REVIEW powder factor"
+        "status": status
     }
 
 

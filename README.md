@@ -14,6 +14,7 @@ All modules use **stdlib Python only** — zero external dependencies beyond `fa
 | `dewatering` | NPSH, pump power, inflow | SME, Hartman & Mutmansky |
 | `slope_stability` | Bishop FOS, bench design | Hoek-Bray, SME |
 | `blasting` | PPV, overpressure, blast design | USBM RI 8507, AS 2187.2 |
+| `economics` | NPV, payback, cutoff grade | SME, Runge (1998) |
 
 ## MCP Tools (24 tools)
 
@@ -51,6 +52,13 @@ Blasting:
   vibration_check              — Regulatory limit assessment
   air_overpressure             — Blast noise dB
   blast_design_tool            — Burden, spacing, stemming, charge
+
+Economics:
+  calculate_npv                — Net Present Value for project evaluation
+  calculate_payback            — Simple or discounted payback period
+  calculate_cutoff_grade       — Breakeven cutoff grade (g/t)
+  calculate_annual_revenue     — Revenue from production and grade
+  calculate_mining_cost        — Cost per tonne calculation
 
 Meta:
   toolbox_info                 — Version, modules, standards
